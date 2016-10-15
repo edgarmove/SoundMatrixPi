@@ -9,6 +9,8 @@ import sounds
 
 GPIO.setmode(GPIO.BCM)
 
+soundChannelIndex = 0
+
 ButtonIDs = [ [1,2,3,4],
            [5,6,7,8],
            [9,10,11,12],
@@ -20,24 +22,37 @@ RowPins = [12,16,20,21]
 # gpio outputs for columns
 ColumnPins = [17,4,3,2]
 
-# define four outputs and set to high
-for j in range(len(ColumnPins)):
-    GPIO.setup(ColumnPins[j], GPIO.OUT)
-    GPIO.output(ColumnPins[j], 1)
+# gpio outputs for LEDs
+LEDPins = [27,22,10,9]
 
 # define four inputs with pull up resistor
 for i in range(len(RowPins)):
     GPIO.setup(RowPins[i], GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
+# define four outputs and set to high
+for j in range(len(ColumnPins)):
+    GPIO.setup(ColumnPins[j], GPIO.OUT)
+    GPIO.output(ColumnPins[j], 1)
+
+# define four outputs
+for k in range(len(LEDPins)):
+    GPIO.setup(LEDPins[k], GPIO.OUT)
+
 def ActivateButton(rowPin, colPin):
     sndIndex = ButtonIDs[rowPin][colPin] - 1
     PlaySound(sounds.SoundsList[sndIndex])
     print(sndIndex + 1)
-    sleep(.03)
+    LightLED(LEDPins[rowPin])
+    #sleep(.03)
 
 def PlaySound(sound):
-    sounds.soundChannelOne.play(sound)    	
+    sounds.SoundChannelsList[soundChannelIndex].play(sound)
 
+def LightLED(pin):
+    GPIO.output(pin, GPIO.HIGH)
+    sleep(.5)
+    GPIO.output(pin, GPIO.LOW)
+        	
 try:
     while(True):
         for j in range(len(ColumnPins)):
