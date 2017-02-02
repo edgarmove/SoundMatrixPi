@@ -20,13 +20,3 @@ soundFifteen = pygame.mixer.Sound("soundfiles/15.wav")
 soundSixteen = pygame.mixer.Sound("soundfiles/16.wav")
 
 SoundsList = [soundOne,soundTwo,soundThree,soundFour,soundFive,soundSix,soundSeven,soundEight,soundNine,soundTen,soundEleven,soundTwelve,soundThirteen,soundFourteen,soundFifteen,soundSixteen]
-
-soundChannelOne = pygame.mixer.Channel(1)
-soundChannelTwo = pygame.mixer.Channel(2)
-soundChannelThree = pygame.mixer.Channel(3)
-soundChannelFour = pygame.mixer.Channel(4)
-soundChannelFive = pygame.mixer.Channel(5)
-soundChannelSix = pygame.mixer.Channel(6)
-soundChannelSeven = pygame.mixer.Channel(7)
-
-SoundChannelsList = [soundChannelOne,soundChannelTwo,soundChannelThree,soundChannelFour,soundChannelFive,soundChannelSix,soundChannelSeven]

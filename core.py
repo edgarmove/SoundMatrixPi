@@ -7,9 +7,10 @@ from time import sleep
 from sys import exit
 import sounds
 
-GPIO.setmode(GPIO.BCM)
+# comment this out to run script
+EndScript()
 
-soundChannelIndex = 0
+GPIO.setmode(GPIO.BCM)
 
 ButtonIDs = [ [1,2,3,4],
            [5,6,7,8],
@@ -24,6 +25,9 @@ ColumnPins = [17,4,3,2]
 
 # gpio outputs for LEDs
 LEDPins = [27,22,10,9]
+
+# set maximum number of channels to 5
+pygame.mixer.set_num_channels(5)
 
 # define four inputs with pull up resistor
 for i in range(len(RowPins)):
@@ -46,13 +50,19 @@ def ActivateButton(rowPin, colPin):
     #sleep(.03)
 
 def PlaySound(sound):
-    sounds.SoundChannelsList[soundChannelIndex].play(sound)
+    pygame.mixer.set_num_channels(5) # set max channels
+    nextAvailableChannel = pygame.mixer.find_channel() # get next available channel
+    nextAvailableChannel.play(sound) # play sound on that channel
 
 def LightLED(pin):
     GPIO.output(pin, GPIO.HIGH)
     sleep(.5)
     GPIO.output(pin, GPIO.LOW)
-        	
+       
+def EndScript():
+    GPIO.cleanup()
+    exit()
+
 try:
     while(True):
         for j in range(len(ColumnPins)):
@@ -66,5 +76,4 @@ try:
             # return each output pin to high
             GPIO.output(ColumnPins[j],1)
 except KeyboardInterrupt:
-    GPIO.cleanup()
-    exit()
+    EndScript()
