@@ -8,7 +8,7 @@ from sys import exit
 import sounds
 
 # comment this out to run script
-EndScript()
+#EndScript()
 
 GPIO.setmode(GPIO.BCM)
 
@@ -27,7 +27,7 @@ ColumnPins = [17,4,3,2]
 LEDPins = [27,22,10,9]
 
 # set maximum number of channels to 5
-pygame.mixer.set_num_channels(5)
+pygame.mixer.set_num_channels(6)
 
 # define four inputs with pull up resistor
 for i in range(len(RowPins)):
@@ -46,18 +46,12 @@ def ActivateButton(rowPin, colPin):
     sndIndex = ButtonIDs[rowPin][colPin] - 1
     PlaySound(sounds.SoundsList[sndIndex])
     print(sndIndex + 1)
-    LightLED(LEDPins[rowPin])
-    #sleep(.03)
+    sleep(.3)
 
 def PlaySound(sound):
-    pygame.mixer.set_num_channels(5) # set max channels
-    nextAvailableChannel = pygame.mixer.find_channel() # get next available channel
-    nextAvailableChannel.play(sound) # play sound on that channel
-
-def LightLED(pin):
-    GPIO.output(pin, GPIO.HIGH)
-    sleep(.5)
-    GPIO.output(pin, GPIO.LOW)
+    nextAvailableChannel = pygame.mixer.find_channel(True) # get next available channel
+    if nextAvailableChannel != None and nextAvailableChannel.get_busy() == False:
+        nextAvailableChannel.play(sound) # play sound on that channel
        
 def EndScript():
     GPIO.cleanup()
