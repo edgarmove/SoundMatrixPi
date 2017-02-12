@@ -1,10 +1,11 @@
 # a 4x4 button matrix
-# plays a sound and prints the button id for each button
+# each button plays a sound, up to 6 can play simultaneously
 
 import RPi.GPIO as GPIO
 import pygame.mixer
 from time import sleep
 from sys import exit
+import os
 import sounds
 
 # comment this out to run script
@@ -23,8 +24,8 @@ RowPins = [12,16,20,21]
 # gpio outputs for columns
 ColumnPins = [17,4,3,2]
 
-# gpio outputs for LEDs
-LEDPins = [27,22,10,9]
+# gpio input for shutdown button pin
+ShutdownPin = 26
 
 # set maximum number of channels to 5
 pygame.mixer.set_num_channels(6)
@@ -38,24 +39,39 @@ for j in range(len(ColumnPins)):
     GPIO.setup(ColumnPins[j], GPIO.OUT)
     GPIO.output(ColumnPins[j], 1)
 
-# define four outputs
-for k in range(len(LEDPins)):
-    GPIO.setup(LEDPins[k], GPIO.OUT)
+# define input for shutdown button pin
+GPIO.setup(ShutdownPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 def ActivateButton(rowPin, colPin):
     sndIndex = ButtonIDs[rowPin][colPin] - 1
     PlaySound(sounds.SoundsList[sndIndex])
     print(sndIndex + 1)
+    # prevent button presses too close together
     sleep(.3)
 
 def PlaySound(sound):
-    nextAvailableChannel = pygame.mixer.find_channel(True) # get next available channel
+    # get next available sound channel
+    # True arg override returns longest running
+    # sound channel when none are available
+    nextAvailableChannel = pygame.mixer.find_channel(True)
+
+    # channel should techincally never be null because above arg is True
+    # null checking just in case
     if nextAvailableChannel != None and nextAvailableChannel.get_busy() == False:
-        nextAvailableChannel.play(sound) # play sound on that channel
+        nextAvailableChannel.play(sound) 
        
 def EndScript():
     GPIO.cleanup()
     exit()
+
+def ShutdownSystem():
+    # slowly stop pygame operations and shutdown the RPi
+    sleep(1)
+    pygame.mixer.stop()
+    sleep(.5)
+    pygame.mixer.quit()
+    sleep(1)
+    os.system('shutdown now -h')
 
 try:
     while(True):
@@ -69,5 +85,10 @@ try:
                         pass
             # return each output pin to high
             GPIO.output(ColumnPins[j],1)
+
+        # listen for shutdown button
+        shutdownInputValue = GPIO.input(ShutdownPin)
+        if (shutdownInputValue == False):
+            ShutdownSystem()
 except KeyboardInterrupt:
     EndScript()
