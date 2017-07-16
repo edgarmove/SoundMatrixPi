@@ -8,24 +8,22 @@ from sys import exit
 import os
 import sounds
 
-# comment this out to run script
-#EndScript()
+print("sound matrix is running...")
 
 GPIO.setmode(GPIO.BCM)
 
-ButtonIDs = [ [1,2,3,4],
-           [5,6,7,8],
-           [9,10,11,12],
-           [13,14,15,16] ]
+ButtonIDs = [ [1,2,3,4,5,6,7],
+           [8,9,10,11,12,13,14],
+           [15,16,17,18,19,20,21] ]
 
 # gpio inputs for rows
-RowPins = [12,16,20,21]
+RowPins = [16,20,21]
 
 # gpio outputs for columns
-ColumnPins = [17,4,3,2]
+ColumnPins = [26,19,13,6,5,22,27,17]
 
 # gpio input for shutdown button pin
-ShutdownPin = 26
+ShutdownPin = 12
 
 # set maximum number of channels to 5
 pygame.mixer.set_num_channels(6)
@@ -62,6 +60,7 @@ def PlaySound(sound):
        
 def EndScript():
     GPIO.cleanup()
+    print("sound matrix is exiting...")
     exit()
 
 def ShutdownSystem():
@@ -71,7 +70,10 @@ def ShutdownSystem():
     sleep(.5)
     pygame.mixer.quit()
     sleep(1)
-    os.system('shutdown now -h')
+#    os.system('shutdown now -h')
+
+# comment this out to run script
+#EndScript()
 
 try:
     while(True):
