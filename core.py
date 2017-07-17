@@ -20,7 +20,7 @@ ButtonIDs = [ [1,2,3,4,5,6,7],
 RowPins = [16,20,21]
 
 # gpio outputs for columns
-ColumnPins = [26,19,13,6,5,22,27,17]
+ColumnPins = [26,19,13,6,5,22,27]
 
 # gpio input for shutdown button pin
 ShutdownPin = 12

@@ -1,9 +1,9 @@
 import pygame.mixer
 
-pygame.mixer.init(48000, -16, 1, 1024)
+pygame.mixer.init(44100, -16, 1, 1024)
 
 soundOne = pygame.mixer.Sound("soundfiles/02-01.wav")
-soundTwo = pygame.mixer.Sound("soundfiles/02-11.wav")
+soundTwo = pygame.mixer.Sound("soundfiles/02-19.wav")
 soundThree = pygame.mixer.Sound("soundfiles/02-15.wav")
 soundFour = pygame.mixer.Sound("soundfiles/02-21.wav")
 soundFive = pygame.mixer.Sound("soundfiles/02-05.wav")
