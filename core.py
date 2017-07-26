@@ -1,4 +1,4 @@
-# a 4x4 button matrix
+# a 3x7 button matrix
 # each button plays a sound, up to 6 can play simultaneously
 
 import RPi.GPIO as GPIO
@@ -42,8 +42,8 @@ GPIO.setup(ShutdownPin, GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
 def ActivateButton(rowPin, colPin):
     sndIndex = ButtonIDs[rowPin][colPin] - 1
+    print("button " + str(sndIndex + 1) + " pressed")
     PlaySound(sounds.SoundsList[sndIndex])
-    print(sndIndex + 1)
     # prevent button presses too close together
     sleep(.3)
 
@@ -56,7 +56,7 @@ def PlaySound(sound):
     # channel should techincally never be null because above arg is True
     # null checking just in case
     if nextAvailableChannel != None and nextAvailableChannel.get_busy() == False:
-        nextAvailableChannel.play(sound) 
+        nextAvailableChannel.play(sound)
        
 def EndScript():
     GPIO.cleanup()
@@ -70,7 +70,7 @@ def ShutdownSystem():
     sleep(.5)
     pygame.mixer.quit()
     sleep(1)
-#    os.system('shutdown now -h')
+    os.system('shutdown now -h')
 
 # comment this out to run script
 #EndScript()
@@ -83,6 +83,7 @@ try:
             for i in range(len(RowPins)):
                 if GPIO.input(RowPins[i]) == 0:
                     ActivateButton(i,j)
+                    # do nothing while button is being held down
                     while(GPIO.input(RowPins[i]) == 0):
                         pass
             # return each output pin to high
